@@ -81,6 +81,17 @@ parse_frame.grid(row=0, column=2)
 parse_button = tk.Button(master=parse_frame, text="Parse tree", width=10, borderwidth=5)
 parse_button.pack()
 
+# regular expression
+regular_expression_frame=tk.Frame(
+    master=frame,
+    relief=tk.GROOVE,
+    borderwidth=3
+)
+regular_expression_text ="Regular Expression: (repeat)((ID)(:=)(ID|(num)+)(;))*(until)(num+|((ID)(=|<|>|<=|>=)(num+|ID)))"
+regular_expression_frame.grid(row=3,column=1)
+regular_expression = tk.Label(master=regular_expression_frame,text=regular_expression_text,borderwidth=5,
+                              font=('Arial', 11,))
+regular_expression.pack(pady=5,padx=5)
 
 # DFA hint
 DFA_hint_frame = tk.Frame(
