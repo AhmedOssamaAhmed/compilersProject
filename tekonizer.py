@@ -74,4 +74,5 @@ def tok(data):
         print(tok)
         counter +=1
     return list_tok , list_tok_DFA
+#new change
 
