@@ -1,7 +1,6 @@
 import ply.lex as lex
 
 # List of token names.   This is always required
-
 tokens = (
     'ID',
     'ASSIGN',
@@ -9,7 +8,8 @@ tokens = (
     'SEMICOLON',
     'LESSTHAN',
     'EQUAL',
-    'GREATERTHAN',
+    'GREATERTHAN'
+    'PROHIBITED',
 )
 
 t_ASSIGN = r'\:\='
@@ -17,14 +17,13 @@ t_SEMICOLON = r'\;'
 t_LESSTHAN = r'\<'
 t_EQUAL = r'\='
 t_GREATERTHAN = r'\>'
-
+t_PROHIBITED = r'[\!\@\#\$\%\^\&\*\(\)\,\.\'\"\{\}]'
 reserved = {
     'repeat': 'REPEAT',
-    'Until': 'UNTIL',
+    'Until': 'UNTIL'
 }
 
-tokens = ['ID', 'ASSIGN', 'NUMBER', 'SEMICOLON', 'LESSTHAN', 'EQUAL', 'GREATERTHAN', ] + list(reserved.values())
-
+tokens = ['ID', 'ASSIGN', 'NUMBER', 'SEMICOLON', 'LESSTHAN', 'EQUAL', 'GREATERTHAN', 'PROHIBITED' ] + list(reserved.values())
 
 def t_COMMENT(t):
     r'\#.*'

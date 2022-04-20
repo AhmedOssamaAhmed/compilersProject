@@ -38,7 +38,8 @@ lst = [('R','-->','repeat'),
        ('U','-->','Until'),
        ('E','-->','Equal'),
        ('G','-->','GreaterThan'),
-       ('L','-->','LessThan'),]
+       ('L','-->','LessThan'),
+       ('P','-->','PROHIBITED')]
 # print(lst)
 
 # find total number of rows and
