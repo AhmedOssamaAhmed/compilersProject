@@ -3,19 +3,17 @@ import ply.lex as lex
 # List of token names.   This is always required
 
 tokens = (
-    # 'REPEAT',
     'ID',
     'ASSIGN',
     'NUMBER',
-    'SIMICOLON',
-    # 'UNTIL',
+    'SEMICOLON',
     'LESSTHAN',
     'EQUAL',
     'GREATERTHAN',
 )
 
 t_ASSIGN = r'\:\='
-t_SIMICOLON = r'\;'
+t_SEMICOLON = r'\;'
 t_LESSTHAN = r'\<'
 t_EQUAL = r'\='
 t_GREATERTHAN = r'\>'
@@ -25,7 +23,7 @@ reserved = {
     'Until': 'UNTIL',
 }
 
-tokens = ['ID', 'ASSIGN', 'NUMBER', 'SIMICOLON', 'LESSTHAN', 'EQUAL', 'GREATERTHAN', ] + list(reserved.values())
+tokens = ['ID', 'ASSIGN', 'NUMBER', 'SEMICOLON', 'LESSTHAN', 'EQUAL', 'GREATERTHAN', ] + list(reserved.values())
 
 
 def t_COMMENT(t):
@@ -78,16 +76,3 @@ def tok(data):
         counter +=1
     return list_tok , list_tok_DFA
 
-
-# list_tok ="" # this is list of the saved tokens
-# data = str(input("Sentence: "))
-# lexer.input(data)
-# # Tokenize
-# while True:
-#     tok = lexer.token()
-#     if not tok:
-#         break  # No more input
-#     list_tok+= (tok.type[0])
-#     print(tok)
-# print(list_tok)
-# DFACheck(list_tok)
