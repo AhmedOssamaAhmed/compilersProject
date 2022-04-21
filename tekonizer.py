@@ -17,7 +17,7 @@ t_SEMICOLON = r'\;'
 t_LESSTHAN = r'\<'
 t_EQUAL = r'\='
 t_GREATERTHAN = r'\>'
-t_PROHIBITED = r'[\!\@\$\%\^\&\*\(\)\,\.\'\"\{\}\:]'
+t_PROHIBITED = r'[\!\@\$\%\^\&\*\(\)\,\.\'\"\{\}]'
 reserved = {
     'repeat': 'REPEAT',
     'Until': 'UNTIL'

@@ -26,8 +26,8 @@ frame.pack()
 frame.columnconfigure(2, weight=1, minsize=100)
 frame.rowconfigure(3, weight=1, minsize=100)
 
-# text editor for typing the code
 
+# text editor for typing the code
 editor_frame = tk.Frame(
     master=frame,
     relief=tk.GROOVE,

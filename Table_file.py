@@ -1,16 +1,5 @@
 from tkinter import *
 
-# import main
-# import tekonizer
-# import main
-
-# root = Tk()
-# container = Frame(root)
-# canvas = Canvas(container)
-# scrollbar = Scrollbar(container, orient="vertical", command=canvas.yview)
-# scrollable_frame = Frame(canvas)
-
-
 class Table:
 
     def __init__(self, root):
@@ -40,7 +29,7 @@ lst = [('R','-->','repeat'),
        ('G','-->','GreaterThan'),
        ('L','-->','LessThan'),
        ('P','-->','PROHIBITED')]
-# print(lst)
+
 
 # find total number of rows and
 # columns in list
