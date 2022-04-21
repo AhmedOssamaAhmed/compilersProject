@@ -27,8 +27,8 @@ def DFACheck(input):
             'Num-Cond': {'G': {'Compare'}, 'L': {'Compare'}, 'E': {'Equal'}},
             'Compare': {'I': {'Final-ID-Cond'}, 'N': {'Final-Num-Cond'}, 'E': {'Equal'}},
             'Equal': {'I': {'Final-ID-Cond'}, 'N': {'Final-Num-Cond'}},
-            'Final-ID-Cond': {},
-            'Final-Num-Cond': {'N': {'Final-Num-Cond'}},
+            'Final-ID-Cond': {'R':{'Repeat'}},
+            'Final-Num-Cond': {'N': {'Final-Num-Cond'},'R':{'Repeat'}},
         },
         initial_state='Begin',
         final_states={'ID-Cond', 'Num-Cond', 'Final-ID-Cond', 'Final-Num-Cond'}
