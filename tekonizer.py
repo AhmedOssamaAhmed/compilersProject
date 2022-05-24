@@ -18,6 +18,7 @@ t_LESSTHAN = r'\<'
 t_EQUAL = r'\='
 t_GREATERTHAN = r'\>'
 t_PROHIBITED = r'[\!\@\$\%\^\&\*\(\)\,\.\'\"\{\}]'
+# t_PROHIBITED2 = r'[\d+[a-zA-Z_][a-zA-Z_0-9]*]'
 reserved = {
     'repeat': 'REPEAT',
     'Until': 'UNTIL'
