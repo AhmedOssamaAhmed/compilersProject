@@ -95,13 +95,20 @@ parse_table_button.pack()
 
 # parse tree
 
+def parse_tree_helper():
+    INPUT = editor.get("1.0", "end-1c")
+    tokens = tekonizer.tok(INPUT)[0]
+    string_tokens = tokens_map(tokens)
+    stack= main_parser.process_input(string_tokens)[2]
+    main_parser.parse_table_generator(stack)
+
 parse_tree_frame = tk.Frame(
     master=buttons_frame,
     relief=tk.RAISED,
     borderwidth=3
 )
 parse_tree_frame.grid(row=0, column=3)
-parse_tree_button = tk.Button(master=parse_tree_frame, text="Parse tree", width=10, borderwidth=5)
+parse_tree_button = tk.Button(master=parse_tree_frame, text="Parse tree", width=10, borderwidth=5,command=parse_tree_helper)
 parse_tree_button.pack()
 
 # SLR Diagram

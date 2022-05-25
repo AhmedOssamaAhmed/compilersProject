@@ -9,6 +9,7 @@ from tkinter import Canvas, Label, Frame, Button, Tk, Entry, Toplevel
 import matplotlib.pyplot as plt
 import networkx as nx
 from graphviz import Digraph
+from networkx.drawing.nx_pydot import graphviz_layout
 
 global master
 master = Tk()
@@ -625,6 +626,51 @@ def helper():
     parse_table = [["" for c in range(len(terminals) + len(nonterminals) + 1)] for r in range(len(C))]
     print_info()
     construct_dfa()
+
+def remove_numbers(lst):
+
+        no_integers = [x for x in lst if not isinstance(x, int)]
+        major_list = []
+        for i in range(len(lst)):
+            sublist = lst[i].split()
+            for j in range(0, len(sublist), 2):
+                sublist[j] = int(sublist[j])
+            no_integers = [x for x in sublist if not isinstance(x, int)]
+            for h in range(len(no_integers)):
+                no_integers[h] += str(h)
+            # print(no_integers)
+            major_list.append(no_integers)
+        return major_list
+
+def parse_table_generator(lst):
+    stack = remove_numbers(lst)
+    G = nx.DiGraph()
+    for i in range(len(stack)-1, 4,-1):
+        length_of_current_node = len(stack[i])
+        for j in range(len(stack[i])):
+            if stack[i][j] in stack[i-1]:
+                continue
+            else:
+                follow_length = len(stack[i-1])
+                for x in range(follow_length):
+                    if stack[i][j].isupper():
+                        G.add_edge(f"{stack[i][j]}",f"{stack[i-1][x]}")
+            if stack[i][j].islower() :
+                print(stack[i][j].islower())
+                while stack[i][0].islower():
+                    for f in range(i,0,-1):
+                        if len(stack[f]) >0:
+                            if stack[f][0].isupper():
+                                break
+                            print(f)
+                            print(j)
+                            print(f"poped{stack[f][0]}")
+                            stack[f].pop(0)
+                            print(stack)
+    pos = graphviz_layout(G, prog="dot")
+    nx.draw(G, pos, node_size=500, with_labels=True, node_color="white")
+    plt.show()
+    # return G
 
 # def main():
 #     parse_grammar()
