@@ -1,6 +1,7 @@
 import tkinter as tk
 import DFA
 import Table_file
+import stack_tree
 import main_parser
 import tekonizer
 import treeFile
@@ -122,7 +123,18 @@ def stack_helper():
     INPUT = editor.get("1.0", "end-1c")
     tokens = tekonizer.tok(INPUT)[0]
     string_tokens = tokens_map(tokens)
-    main_parser.view_stack(string_tokens)
+    row, ste, sta, inp, act = main_parser.process_input(string_tokens)
+    stack_list=[]
+    for i in range(len(sta)):
+        stack_list.append([sta[i],inp[i],act[i]])
+    print(stack_list)
+    stack_tree.tree(stack_list)
+    # main_parser.view_stack(string_tokens)
+    print(f"row is :{row}")
+    print(f"ste is :{ste}")
+    print(f"sta is :{sta}")
+    print(f"inp is :{inp}")
+    print(f"act is :{act}")
 
 stack_input = tk.Frame(
     master=buttons_frame,
@@ -182,4 +194,17 @@ grammar_lst = [('stmt-seq','-->','statement stmt-seq\''),
        ('factor','-->','ID | NUMBER'),
        ]
 grammar_table = Table_file.Table(grammar_frame,grammar_lst,23,"Grammar")
+
+#
+# # stack
+# view_stack_frame = tk.Frame(
+#     master=frame,
+#     relief=tk.GROOVE,
+#     borderwidth=3,
+#     height=100,
+# )
+# view_stack_frame.grid(row=2,column=3)
+# adjusted_tree.tree(view_stack_frame,DFA_hint_lst)
+
+
 window.mainloop()

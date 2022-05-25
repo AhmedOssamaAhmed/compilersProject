@@ -5,6 +5,9 @@ from tkinter import *
 # import time
 # import os
 from tkinter import Canvas, Label, Frame, Button, Tk, Entry, Toplevel
+
+import matplotlib.pyplot as plt
+import networkx as nx
 from graphviz import Digraph
 
 global master
@@ -68,7 +71,6 @@ def parse_grammar():
 
     symbols = terminals + nonterminals
     print(f"defined terminal {terminals}")
-
 
 
 first_seen = []
@@ -344,7 +346,7 @@ def construct_dfa():
                 for prod in prods:
                     pd = pd + prod
                     print(prod),
-                Z = Z + pd + "\n"
+                Z = Z + pd + "\r\n"
                 print()
             Y = Y + Z
         print()
@@ -356,6 +358,7 @@ def construct_dfa():
     global dot
 
     dot = Digraph()
+
     for i in range(len(C)):
         for a in symbols:
             rel = parse_table[i][symbols.index(a)]
@@ -372,9 +375,11 @@ def construct_dfa():
                         rel = rel[spos:spos + 2]
                         print(rel)
                         r = int(rel[1:3])
-                    else:
+                    elif 's' in rel:
                         # print rel
                         r = int(rel[1:3])
+                    else:
+                        r = int(rel)
 
                 print("node %d relates to %s for %s" % (i, r, a))
                 relation.append(chr(i + 97) + chr(r + 97))
@@ -391,6 +396,8 @@ def construct_dfa():
 
     for i in range(len(relation)):
         dot.edge(relation[i][0], relation[i][1], label=r1[i])
+    # nx.draw(dot)
+    # plt.show()
 
 
 def process_input(inputX):
@@ -553,59 +560,65 @@ def view_parsing():
         m = 130
         n = n + 30
 
-    show.geometry("%dx%d%+d%+d" % (1300, 800, 0,0))
+    # show.geometry("%dx%d%+d%+d" % (1300, 800, 0,0))
 
+    scrol = Scrollbar(show)
+    scrol.configure(command=canvas.yview)
+    canvas.configure(yscrollcommand=scrol.set)
+    scrol.pack(side=LEFT, fill=BOTH)
     # display.pack()
+
 
 # han7tagoooo
-def view_stack(inputstring):
-    # inputstring = u2_entry.get()
-    # print(f"osos view stack: {inputstring}")
-
-    row, ste, sta, inp, act = process_input(inputstring)
-    print(inputstring)
-
-    show = Toplevel(master)
-    show.title("Stack Implementation")
-    show.geometry("%dx%d%+d%+d" % (1300, 1300, 0, 0))
-    canvas = Canvas(show, width=2000, height=1000)
-    canvas.grid(row=0, column=0)
-    row = row - 1
-    col = 4
-    m, a = 10, 10
-    n = 100
-    b = 125
-
-    for i in range(len(sta)):
-        canvas.create_text(a + 60, b + 15, text=i + 1, font="Times 10")
-        canvas.create_text(a + 60 + 260, b + 15, text=sta[i], font="Times 10")
-        canvas.create_text(a + 60 + 450, b + 15, text=inp[i], font="Times 10")
-        canvas.create_text(a + 60 + 660, b + 15, text=act[i], font="Times 10")
-
-        b = b + 30
-
-    for i in range(0, row + 1):
-        for j in range(0, col):
-            print(m, n)
-
-            canvas.create_rectangle(m, n, m + 200, n + 30)
-            m = m + 200
-        m = 10
-        n = n + 30
-    print(ste, sta, inp, act)
-    canvas.create_text(65, 110, text="S.N.", font="Times 10")
-    canvas.create_text(285, 110, text="Stack", font="Times 10")
-    canvas.create_text(475, 110, text="Input", font="Times 10")
-    canvas.create_text(665, 110, text="Action", font="Times 10")
-
-    show.geometry("%dx%d%+d%+d" % (1300, 800, 0, 0))
-
-    # display.pack()
+# def view_stack(inputstring):
+#     # inputstring = u2_entry.get()
+#     # print(f"osos view stack: {inputstring}")
+#
+#     row, ste, sta, inp, act = process_input(inputstring)
+#     print(inputstring)
+#
+#     show = Toplevel(master)
+#     show.title("Stack Implementation")
+#     show.geometry("%dx%d%+d%+d" % (1300, 1300, 0, 0))
+#     canvas = Canvas(show, width=2000, height=1000)
+#     canvas.grid(row=0, column=0)
+#     row = row - 1
+#     col = 4
+#     m, a = 10, 10
+#     n = 100
+#     b = 125
+#
+#     for i in range(len(sta)):
+#         canvas.create_text(a + 60, b + 15, text=i + 1, font="Times 10")
+#         canvas.create_text(a + 60 + 260, b + 15, text=sta[i], font="Times 10")
+#         canvas.create_text(a + 60 + 450, b + 15, text=inp[i], font="Times 10")
+#         canvas.create_text(a + 60 + 660, b + 15, text=act[i], font="Times 10")
+#
+#         b = b + 30
+#
+#     for i in range(0, row + 1):
+#         for j in range(0, col):
+#             print(m, n)
+#
+#             canvas.create_rectangle(m, n, m + 200, n + 30)
+#             m = m + 200
+#         m = 10
+#         n = n + 30
+#     print(ste, sta, inp, act)
+#     canvas.create_text(65, 110, text="S.N.", font="Times 10")
+#     canvas.create_text(285, 110, text="Stack", font="Times 10")
+#     canvas.create_text(475, 110, text="Input", font="Times 10")
+#     canvas.create_text(665, 110, text="Action", font="Times 10")
+#
+#     show.geometry("%dx%d%+d%+d" % (1300, 800, 0, 0))
+#
+#     # display.pack()
 
 
 def getG():
     inputstring = u1_entry.get()
     print(inputstring)
+
 
 def helper():
     parse_grammar()
@@ -615,47 +628,47 @@ def helper():
     print_info()
     construct_dfa()
 
-def main():
-    parse_grammar()
-    items()
-    global parse_table
-    parse_table = [["" for c in range(len(terminals) + len(nonterminals) + 1)] for r in range(len(C))]
-    print_info()
-    construct_dfa()
-    # process_input()
-
-    var = IntVar()
-
-    table = canvas.create_polygon(50, 100, 600, 100, 600, 310, 50, 310, fill='PaleVioletRed1')
-    canvas.create_text(150, 110, text="Enter the grammar", font="Times 15 bold")
-
-    table1 = canvas.create_polygon(50, 350, 600, 350, 600, 500, 50, 500, fill='PaleVioletRed1')
-    canvas.create_text(150, 360, text="Enter input string", font="Times 15 bold")
-
-    lr0 = Button(canvas, text="View LR(0) Items", font="Times 15 bold", command=view_lr)
-    canvas.create_window(750, 270, window=lr0, height=50, width=170)
-
-    pt = Button(canvas, text="View Parsing Table", font="Times 15 bold", command=view_parsing)
-    canvas.create_window(750, 350, window=pt, height=50, width=170)
-
-    vs = Button(canvas, text='View Stack', font="Times 15 bold", command=view_stack)
-    canvas.create_window(950, 270, window=vs, height=50, width=170)
-
-    quit = Button(canvas, text='QUIT', font="Times 15 bold", command=master.quit)
-    canvas.create_window(950, 350, window=quit, height=50, width=170)
-    # canvas.pack()
-
-    # Adding a vertical scrollbar to Treeview widget
-    treeScroll = Scrollbar(canvas)
-    treeScroll.configure(command=canvas.yview)
-    canvas.configure(yscrollcommand=treeScroll.set)
-    treeScroll.pack(side=RIGHT, fill=BOTH)
-    canvas.pack()
-
-    # process_input()
-    mainloop()
-
-
-if __name__ == '__main__':
-    main()
-    # print(f"osos non terminal {nonterminals}")
+# def main():
+#     parse_grammar()
+#     items()
+#     global parse_table
+#     parse_table = [["" for c in range(len(terminals) + len(nonterminals) + 1)] for r in range(len(C))]
+#     print_info()
+#     construct_dfa()
+#     # process_input()
+#
+#     var = IntVar()
+#
+#     table = canvas.create_polygon(50, 100, 600, 100, 600, 310, 50, 310, fill='PaleVioletRed1')
+#     canvas.create_text(150, 110, text="Enter the grammar", font="Times 15 bold")
+#
+#     table1 = canvas.create_polygon(50, 350, 600, 350, 600, 500, 50, 500, fill='PaleVioletRed1')
+#     canvas.create_text(150, 360, text="Enter input string", font="Times 15 bold")
+#
+#     lr0 = Button(canvas, text="View LR(0) Items", font="Times 15 bold", command=view_lr)
+#     canvas.create_window(750, 270, window=lr0, height=50, width=170)
+#
+#     pt = Button(canvas, text="View Parsing Table", font="Times 15 bold", command=view_parsing)
+#     canvas.create_window(750, 350, window=pt, height=50, width=170)
+#
+#     vs = Button(canvas, text='View Stack', font="Times 15 bold", command=view_stack)
+#     canvas.create_window(950, 270, window=vs, height=50, width=170)
+#
+#     quit = Button(canvas, text='QUIT', font="Times 15 bold", command=master.quit)
+#     canvas.create_window(950, 350, window=quit, height=50, width=170)
+#     # canvas.pack()
+#
+#     # Adding a vertical scrollbar to Treeview widget
+#     treeScroll = Scrollbar(canvas)
+#     treeScroll.configure(command=canvas.yview)
+#     canvas.configure(yscrollcommand=treeScroll.set)
+#     treeScroll.pack(side=RIGHT, fill=BOTH)
+#     canvas.pack()
+#
+#     # process_input()
+#     mainloop()
+#
+#
+# if __name__ == '__main__':
+#     main()
+#     # print(f"osos non terminal {nonterminals}")
