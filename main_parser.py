@@ -9,7 +9,7 @@ from graphviz import Digraph
 
 global master
 master = Tk()
-
+master.wm_withdraw()
 master.title('SLR Parser')
 
 canvas = Canvas(master, width=master.winfo_screenwidth(), height=master.winfo_screenheight())
@@ -398,6 +398,7 @@ def process_input(inputX):
     sta = []
     inp = []
     act = []
+    adjusted_stack = []
     get_input = inputX
     to_parse = " ".join((get_input + " $").split()).split(" ")
     pointer = 0
@@ -421,6 +422,11 @@ def process_input(inputX):
         stckx = "{:27}".format(stack_content)
 
         sta.append(stckx)
+        adjusted_stack.append(stckx)
+        adjusted_stack.append(" ")
+        print(f"sta {sta}")
+        print(f"adjusted {adjusted_stack}")
+        print(f"stack {stack}")
         print(stck),
         i = pointer
         while i < len(to_parse):
@@ -571,10 +577,10 @@ def view_stack(inputstring):
     b = 125
 
     for i in range(len(sta)):
-        canvas.create_text(a + 60, b + 15, text=i + 1, font="Times 15 bold")
-        canvas.create_text(a + 60 + 260, b + 15, text=sta[i], font="Times 15 bold")
-        canvas.create_text(a + 60 + 400, b + 15, text=inp[i], font="Times 15 bold")
-        canvas.create_text(a + 60 + 660, b + 15, text=act[i], font="Times 15 bold")
+        canvas.create_text(a + 60, b + 15, text=i + 1, font="Times 10")
+        canvas.create_text(a + 60 + 260, b + 15, text=sta[i], font="Times 10")
+        canvas.create_text(a + 60 + 450, b + 15, text=inp[i], font="Times 10")
+        canvas.create_text(a + 60 + 660, b + 15, text=act[i], font="Times 10")
 
         b = b + 30
 
@@ -587,10 +593,10 @@ def view_stack(inputstring):
         m = 10
         n = n + 30
     print(ste, sta, inp, act)
-    canvas.create_text(65, 110, text="S.N.", font="Times 15 bold")
-    canvas.create_text(285, 110, text="Stack", font="Times 15 bold")
-    canvas.create_text(475, 110, text="Input", font="Times 15 bold")
-    canvas.create_text(665, 110, text="Action", font="Times 15 bold")
+    canvas.create_text(65, 110, text="S.N.", font="Times 10")
+    canvas.create_text(285, 110, text="Stack", font="Times 10")
+    canvas.create_text(475, 110, text="Input", font="Times 10")
+    canvas.create_text(665, 110, text="Action", font="Times 10")
 
     show.geometry("%dx%d%+d%+d" % (1300, 800, 0, 0))
 
@@ -637,6 +643,13 @@ def main():
 
     quit = Button(canvas, text='QUIT', font="Times 15 bold", command=master.quit)
     canvas.create_window(950, 350, window=quit, height=50, width=170)
+    # canvas.pack()
+
+    # Adding a vertical scrollbar to Treeview widget
+    treeScroll = Scrollbar(canvas)
+    treeScroll.configure(command=canvas.yview)
+    canvas.configure(yscrollcommand=treeScroll.set)
+    treeScroll.pack(side=RIGHT, fill=BOTH)
     canvas.pack()
 
     # process_input()

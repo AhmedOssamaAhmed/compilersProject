@@ -5,7 +5,7 @@ import main_parser
 import tekonizer
 import treeFile
 
-
+main_parser.helper()
 def dfa_helper():
     DFA.DFACheck(tekonizer.tok(editor.get("1.0", "end-1c"))[1])
 
@@ -81,7 +81,6 @@ DFA_button.pack()
 # parse table
 
 def parse_table_helper():
-    main_parser.helper()
     main_parser.view_parsing()
 
 parse_table_frame = tk.Frame(
@@ -106,7 +105,6 @@ parse_tree_button.pack()
 
 # SLR Diagram
 def slr_helper():
-    main_parser.helper()
     main_parser.view_lr()
 
 SLR_frame = tk.Frame(
@@ -124,7 +122,6 @@ def stack_helper():
     INPUT = editor.get("1.0", "end-1c")
     tokens = tekonizer.tok(INPUT)[0]
     string_tokens = tokens_map(tokens)
-    main_parser.helper()
     main_parser.view_stack(string_tokens)
 
 stack_input = tk.Frame(
