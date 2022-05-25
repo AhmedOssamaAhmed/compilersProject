@@ -405,7 +405,6 @@ def process_input(inputX):
     sta = []
     inp = []
     act = []
-    adjusted_stack = []
     get_input = inputX
     to_parse = " ".join((get_input + " $").split()).split(" ")
     pointer = 0
@@ -425,20 +424,19 @@ def process_input(inputX):
         print("|{:^8}|".format(step)),
         for i in stack:
             stack_content += i
+            stack_content += " "
         stck = "{:27}|".format(stack_content)
         stckx = "{:27}".format(stack_content)
 
         sta.append(stckx)
-        adjusted_stack.append(stckx)
-        adjusted_stack.append(" ")
         print(f"sta {sta}")
-        print(f"adjusted {adjusted_stack}")
         print(f"stack {stack}")
         print(stck),
         i = pointer
         while i < len(to_parse):
             input_content += to_parse[i]
             i += 1
+            input_content += " "
         inpt = "{:>26} | ".format(input_content)
         inptx = "{:>26}".format(input_content)
 
