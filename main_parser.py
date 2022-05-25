@@ -552,8 +552,10 @@ def view_parsing():
     # display.pack()
 
 # han7tagoooo
-def view_stack():
-    inputstring = u2_entry.get()
+def view_stack(inputstring):
+    # inputstring = u2_entry.get()
+    # print(f"osos view stack: {inputstring}")
+
     row, ste, sta, inp, act = process_input(inputstring)
     print(inputstring)
 

@@ -9,12 +9,18 @@ import treeFile
 def dfa_helper():
     DFA.DFACheck(tekonizer.tok(editor.get("1.0", "end-1c"))[1])
 
+def tokens_map(list_tokens):
+    string_token = ""
+    for i in range(len(list_tokens)):
+        string_token += list_tokens[i][1]
+        string_token += " "
+    return string_token
 
 def Take_input():
     INPUT = editor.get("1.0", "end-1c")
     print(INPUT)
     tokens = tekonizer.tok(INPUT)[0]
-    print(tokens)
+    print(f"ourrrrr tokens{tokens}")
     treeFile.tree(tokens)
 
 
@@ -102,6 +108,7 @@ parse_tree_button.pack()
 def slr_helper():
     main_parser.helper()
     main_parser.view_lr()
+
 SLR_frame = tk.Frame(
     master=buttons_frame,
     relief=tk.RAISED,
@@ -113,13 +120,20 @@ SLR_button.pack()
 
 # Stack
 
+def stack_helper():
+    INPUT = editor.get("1.0", "end-1c")
+    tokens = tekonizer.tok(INPUT)[0]
+    string_tokens = tokens_map(tokens)
+    main_parser.helper()
+    main_parser.view_stack(string_tokens)
+
 stack_input = tk.Frame(
     master=buttons_frame,
     relief=tk.RAISED,
     borderwidth=3
 )
 stack_input.grid(row=0, column=5)
-stack_button = tk.Button(master=stack_input, text="Stack", width=10, borderwidth=5)
+stack_button = tk.Button(master=stack_input, text="Stack", width=10, borderwidth=5,command=stack_helper)
 stack_button.pack()
 
 # regular expression
