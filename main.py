@@ -1,6 +1,7 @@
 import tkinter as tk
 import DFA
 import Table_file
+import main_parser
 import tekonizer
 import treeFile
 
@@ -73,13 +74,17 @@ DFA_button.pack()
 
 # parse table
 
+def parse_table_helper():
+    main_parser.helper()
+    main_parser.view_parsing()
+
 parse_table_frame = tk.Frame(
     master=buttons_frame,
     relief=tk.RAISED,
     borderwidth=3
 )
 parse_table_frame.grid(row=0, column=2)
-parse_table_button = tk.Button(master=parse_table_frame, text="Parse table", width=10, borderwidth=5)
+parse_table_button = tk.Button(master=parse_table_frame, text="Parse table", width=10, borderwidth=5,command=parse_table_helper)
 parse_table_button.pack()
 
 # parse tree
@@ -94,14 +99,16 @@ parse_tree_button = tk.Button(master=parse_tree_frame, text="Parse tree", width=
 parse_tree_button.pack()
 
 # SLR Diagram
-
+def slr_helper():
+    main_parser.helper()
+    main_parser.view_lr()
 SLR_frame = tk.Frame(
     master=buttons_frame,
     relief=tk.RAISED,
     borderwidth=3
 )
-parse_tree_frame.grid(row=0, column=4)
-SLR_button = tk.Button(master=SLR_frame, text="SLR Diagram", width=10, borderwidth=5)
+SLR_frame.grid(row=0, column=4)
+SLR_button = tk.Button(master=SLR_frame, text="SLR Diagram", width=10, borderwidth=5,command=slr_helper)
 SLR_button.pack()
 
 # Stack
