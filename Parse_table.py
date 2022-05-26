@@ -8,9 +8,9 @@ def tree(lst = [(1,'no tokens',''," "),]):
     win.title("Stack List")
 
     # Set the size of the tkinter window
-    # win.geometry("1400x700")
-    w, h = win.winfo_screenwidth(), win.winfo_screenheight()
-    win.geometry("%dx%d+0+0" % (w, h))
+    win.geometry("1400x700")
+    # w, h = win.winfo_screenwidth(), win.winfo_screenheight()
+    # win.geometry("%dx%d+0+0" % (w, h))
 
     # Create an instance of Style widget
     style= ttk.Style()
