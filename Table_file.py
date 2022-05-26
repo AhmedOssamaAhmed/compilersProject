@@ -17,17 +17,3 @@ class Table:
                 self.e.grid(row=(i+1), column=j)
                 print("done")
 
-
-# take the data
-# initially empty
-
-
-# find total number of rows and
-# columns in list
-
-
-# create root window
-# def token_window():
-# root = Tk()
-# t = Table(root)
-# root.mainloop()

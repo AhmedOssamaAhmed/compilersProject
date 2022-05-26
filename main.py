@@ -23,9 +23,7 @@ def tokens_map(list_tokens):
 
 def Take_input():
     INPUT = editor.get("1.0", "end-1c")
-    print(INPUT)
     tokens = tekonizer.tok(INPUT)[0]
-    print(f"ourrrrr tokens{tokens}")
     treeFile.tree(tokens)
 
 accepted = False
@@ -175,14 +173,8 @@ def stack_helper():
     stack_list = []
     for i in range(len(sta)):
         stack_list.append([sta[i], inp[i], act[i]])
-    print(stack_list)
     stack_tree.tree(stack_list)
-    # main_parser.view_stack(string_tokens)
-    print(f"row is :{row}")
-    print(f"ste is :{ste}")
-    print(f"sta is :{sta}")
-    print(f"inp is :{inp}")
-    print(f"act is :{act}")
+
 
 
 stack_input = tk.Frame(

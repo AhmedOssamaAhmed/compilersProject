@@ -1,22 +1,15 @@
-# Import the required libraries
 from tkinter import *
 from tkinter import ttk
 
 def tree(lst = [(1,'no tokens',''," "),]):
-    # Create an instance of tkinter frame
     win= Tk()
     win.title("Parse table")
 
-    # Set the size of the tkinter window
     win.geometry("1400x700")
-    # w, h = win.winfo_screenwidth(), win.winfo_screenheight()
-    # win.geometry("%dx%d+0+0" % (w, h))
 
-    # Create an instance of Style widget
     style= ttk.Style()
     style.theme_use('clam')
 
-    # Add a Treeview widget and set the selection mode
     tree= ttk.Treeview(win, column=("c1", "c2","c3","c4","c5","c6","c7","c8","c9","c10","c11","c12","c13"), show='headings',height=31, selectmode="browse")
     tree.column("#1", anchor=CENTER, stretch= NO,width=80)
     tree.heading("#1", text="States")
@@ -45,9 +38,6 @@ def tree(lst = [(1,'no tokens',''," "),]):
     tree.column("#13", anchor=CENTER, stretch=NO, width=80)
     tree.heading("#13", text="FACTOR")
 
-    # Insert the data in Treeview widget
-
-    # lst = [(1,'no tokens',''),]
     total_rows = len(lst)
     total_columns = len(lst[0])
     for i  in range(total_rows):
@@ -66,7 +56,6 @@ def tree(lst = [(1,'no tokens',''," "),]):
                                                  lst[i][11],))
 
     print(f"the lsssst {lst}")
-    # Adding a vertical scrollbar to Treeview widget
     treeScroll = ttk.Scrollbar(win)
     xScroll = ttk.Scrollbar(win,orient=HORIZONTAL)
     treeScroll.configure(command=tree.yview)

@@ -68,9 +68,6 @@ def parse_grammar():
                 elif char.isupper() and char not in nonterminals:
                     nonterminals.append(char)
                     G[char] = []  # non terminals dont produce other symbols
-    # terminals.clear()
-    # terminals = ['repeat', 'Until', 'ID', 'ASSIGN', 'SEMICOLON', 'NUMBER']
-    # nonterminals = ['stmt-seq', 'statement', 'repeat-stmt', 'assign-stmt', 'factor']
 
     symbols = terminals + nonterminals
     print(f"defined terminal {terminals}")
@@ -262,31 +259,19 @@ def print_info():
     i = 0
     for head in G.keys():
         for prods in G[head]:
-            print("{:>{width}}:".format(str(i), width=len(str(sum(len(v) for v in G.values()) - 1)))),
-            print("{:>{width}} ->".format(head, width=len(max(G.keys(), key=len)))),
             for prod in prods:
                 print(prod),
             print()
             i += 1
-    print("\nTERMINALS   :", terminals)
-    print("NONTERMINALS:", nonterminals)
-    print("SYMBOLS     :", symbols)
-    print("\nFIRST:")
     for head in G:
-        print("{:>{width}} =".format(head, width=len(max(G.keys(), key=len)))),
-        print("{"),
         num_terms = 0
         for terms in FIRST(head):
             if num_terms > 0:
                 print(", "),
             print(terms),
             num_terms += 1
-        print("}")
 
-    print("\nFOLLOW:")
     for head in G:
-        print("{:>{width}} =".format(head, width=len(max(G.keys(), key=len)))),
-        print("{"),
         num_terms = 0
         for terms in FOLLOW(head):
             if num_terms > 0:
@@ -310,9 +295,7 @@ def print_info():
         for j in symbols:
             ACTION(i, j)
 
-    print("PARSING TABLE:")
-    print("+" + "--------+" * (len(terminals) + len(nonterminals) + 1))
-    print("|{:^8}|".format('STATE')),
+
     for terms in terminals:
         print("{:^7}|".format(terms)),
     print("{:^7}|".format("$")),
@@ -334,7 +317,6 @@ def construct_dfa():
     pd = []
     print("\nITEMS:")
     for i in range(len(C)):
-        print('I' + str(i) + ':')
         I[i] = 'I' + str(i)
         Z = ""
         for keys in C['I' + str(i)]:
@@ -345,22 +327,19 @@ def construct_dfa():
                 pd = ""
 
                 Z = Z + zzz
-                print(zzz),
                 for prod in prods:
                     pd = pd + prod
-                    print(prod),
                 Z = Z + pd + "\r\n"
                 print()
             Y = Y + Z
         print()
         J[i] = Y
-        print(Y)
     for i in range(len(parse_table)):
         for j in symbols:
             ACTION(i, j)
     global dot
 
-    dot = Digraph()
+    dot = Digraph(node_attr={'shape':'box','height':'3'})
 
     for i in range(len(C)):
         for a in symbols:
@@ -376,7 +355,6 @@ def construct_dfa():
                     elif '/' in rel:
                         spos = rel.index('s')
                         rel = rel[spos:spos + 2]
-                        print(rel)
                         r = int(rel[1:3])
                     elif 's' in rel:
                         # print rel
@@ -384,12 +362,9 @@ def construct_dfa():
                     else:
                         r = int(rel)
 
-                print("node %d relates to %s for %s" % (i, r, a))
                 relation.append(chr(i + 97) + chr(r + 97))
                 r1.append(a)
 
-    print(relation)
-    print(r1)
 
     M = [v for v in I.values()]
     N = [v for v in J.values()]
@@ -413,9 +388,6 @@ def process_input(inputX):
     pointer = 0
     stack = ['0']
 
-    print("\n+--------+----------------------------+----------------------------+----------------------------+")
-    print("|{:^8}|{:^28}|{:^28}|{:^28}|".format("STEP", "STACK", "INPUT", "ACTION"))
-    print("+--------+----------------------------+----------------------------+----------------------------+")
 
     step = 1
     while True:
@@ -424,7 +396,6 @@ def process_input(inputX):
         stack_content = ""
         input_content = ""
 
-        print("|{:^8}|".format(step)),
         for i in stack:
             stack_content += i
             stack_content += " "
@@ -432,9 +403,6 @@ def process_input(inputX):
         stckx = "{:27}".format(stack_content)
 
         sta.append(stckx)
-        print(f"sta {sta}")
-        print(f"stack {stack}")
-        print(stck),
         i = pointer
         while i < len(to_parse):
             input_content += to_parse[i]
@@ -444,7 +412,6 @@ def process_input(inputX):
         inptx = "{:>26}".format(input_content)
 
         inp.append(inptx)
-        print(inpt),
         # print step
         step += 1
 
@@ -455,15 +422,12 @@ def process_input(inputX):
             confx = "{:^26}".format(get_action + ". So conflict")
 
             act[-1] = confx
-            print(conf)
             break
         if "s" in get_action:
-            print("{:^26}|".format(get_action))
             stack.append(curr_symbol)
             stack.append(get_action[1:])
             pointer += 1
         elif "r" in get_action:
-            print("{:^26}|".format(get_action))
             i = 0
             for head in G.keys():
                 for prods in G[head]:
@@ -482,62 +446,16 @@ def process_input(inputX):
             print("ERROR: Unrecognized symbol", curr_symbol, "|")
             break
 
-    print("+--------+----------------------------+----------------------------+----------------------------+")
     return step, ste, sta, inp, act
 
 
 def view_lr():
-    dot.render('test.gv.svg', view=True)
+    dot.render('test.gv.svg', view=True,format='png')
 
 
 def view_parsing():
 
     Parse_table.tree(parse_table)
-
-# han7tagoooo
-# def view_stack(inputstring):
-#     # inputstring = u2_entry.get()
-#     # print(f"osos view stack: {inputstring}")
-#
-#     row, ste, sta, inp, act = process_input(inputstring)
-#     print(inputstring)
-#
-#     show = Toplevel(master)
-#     show.title("Stack Implementation")
-#     show.geometry("%dx%d%+d%+d" % (1300, 1300, 0, 0))
-#     canvas = Canvas(show, width=2000, height=1000)
-#     canvas.grid(row=0, column=0)
-#     row = row - 1
-#     col = 4
-#     m, a = 10, 10
-#     n = 100
-#     b = 125
-#
-#     for i in range(len(sta)):
-#         canvas.create_text(a + 60, b + 15, text=i + 1, font="Times 10")
-#         canvas.create_text(a + 60 + 260, b + 15, text=sta[i], font="Times 10")
-#         canvas.create_text(a + 60 + 450, b + 15, text=inp[i], font="Times 10")
-#         canvas.create_text(a + 60 + 660, b + 15, text=act[i], font="Times 10")
-#
-#         b = b + 30
-#
-#     for i in range(0, row + 1):
-#         for j in range(0, col):
-#             print(m, n)
-#
-#             canvas.create_rectangle(m, n, m + 200, n + 30)
-#             m = m + 200
-#         m = 10
-#         n = n + 30
-#     print(ste, sta, inp, act)
-#     canvas.create_text(65, 110, text="S.N.", font="Times 10")
-#     canvas.create_text(285, 110, text="Stack", font="Times 10")
-#     canvas.create_text(475, 110, text="Input", font="Times 10")
-#     canvas.create_text(665, 110, text="Action", font="Times 10")
-#
-#     show.geometry("%dx%d%+d%+d" % (1300, 800, 0, 0))
-#
-#     # display.pack()
 
 
 def getG():
@@ -604,47 +522,3 @@ def parse_tree_generator(lst):
     plt.show()
     # return G
 
-# def main():
-#     parse_grammar()
-#     items()
-#     global parse_table
-#     parse_table = [["" for c in range(len(terminals) + len(nonterminals) + 1)] for r in range(len(C))]
-#     print_info()
-#     construct_dfa()
-#     # process_input()
-#
-#     var = IntVar()
-#
-#     table = canvas.create_polygon(50, 100, 600, 100, 600, 310, 50, 310, fill='PaleVioletRed1')
-#     canvas.create_text(150, 110, text="Enter the grammar", font="Times 15 bold")
-#
-#     table1 = canvas.create_polygon(50, 350, 600, 350, 600, 500, 50, 500, fill='PaleVioletRed1')
-#     canvas.create_text(150, 360, text="Enter input string", font="Times 15 bold")
-#
-#     lr0 = Button(canvas, text="View LR(0) Items", font="Times 15 bold", command=view_lr)
-#     canvas.create_window(750, 270, window=lr0, height=50, width=170)
-#
-#     pt = Button(canvas, text="View Parsing Table", font="Times 15 bold", command=view_parsing)
-#     canvas.create_window(750, 350, window=pt, height=50, width=170)
-#
-#     vs = Button(canvas, text='View Stack', font="Times 15 bold", command=view_stack)
-#     canvas.create_window(950, 270, window=vs, height=50, width=170)
-#
-#     quit = Button(canvas, text='QUIT', font="Times 15 bold", command=master.quit)
-#     canvas.create_window(950, 350, window=quit, height=50, width=170)
-#     # canvas.pack()
-#
-#     # Adding a vertical scrollbar to Treeview widget
-#     treeScroll = Scrollbar(canvas)
-#     treeScroll.configure(command=canvas.yview)
-#     canvas.configure(yscrollcommand=treeScroll.set)
-#     treeScroll.pack(side=RIGHT, fill=BOTH)
-#     canvas.pack()
-#
-#     # process_input()
-#     mainloop()
-#
-#
-# if __name__ == '__main__':
-#     main()
-#     # print(f"osos non terminal {nonterminals}")
