@@ -11,6 +11,8 @@ import networkx as nx
 from graphviz import Digraph
 from networkx.drawing.nx_pydot import graphviz_layout
 
+import Parse_table
+
 global master
 master = Tk()
 master.wm_withdraw()
@@ -489,84 +491,8 @@ def view_lr():
 
 
 def view_parsing():
-    show = Toplevel(master)
-    show.title("Parsing Table")
-    show.geometry("%dx%d%+d%+d" % (1300, 1300, 0, 0))
-    display = Label(show, text="Generation of Parsing Table")
-    canvas = Canvas(show, width=2000, height=1000)
-    canvas.grid(row=0, column=0)
 
-    print(parse_table)
-
-    print(f"osos and alaa{terminals}")
-    print(f"osos and alaa non {nonterminals}")
-    states = len(C)
-    terminal = len(terminals)
-    nonterminal = len(nonterminals)
-    row = states + 1
-    col = terminal + nonterminal + 2
-    print("col" + str(col))
-    m = 130
-    n = 130
-
-    canvas.create_rectangle(10, 70, (terminal + 2) * 120, 100)
-    canvas.create_rectangle(((terminal + 2) * 120), 70, (col - 1) * 120, 100)
-    canvas.create_rectangle(10, 100, 130, 130)
-
-    canvas.create_text((terminal + 2) * 60, 83, text="ACTION", font="Times 10 bold")
-    canvas.create_text(col * 90, 83, text="GOTO", font="Times 10 bold")
-
-    canvas.create_text(65, 110, text="States", font="Times 10 bold")
-
-    a = 130
-    b = 100
-
-    for i in range(0, terminal):
-        canvas.create_rectangle(a, b, a + 120, b + 30)
-        a = a + 120
-
-        canvas.create_text(120 * i + 190, 110, text=terminals[i], font="Times 10 bold")
-    a = a + 120
-    i = i + 1
-    canvas.create_text(120 * i + 190, 110, text="$", font="Times 10 bold")
-
-    j = i + 1
-
-    for i in range(1, nonterminal):
-        canvas.create_text(120 * j + 190, 110, text=nonterminals[i], font="Times 10 bold")
-        j = j + 1
-        canvas.create_rectangle(a, b, a + 120, b + 30)
-        a = a + 120
-
-    c = 10
-    d = 130
-
-    for i in range(0, len(C)):
-        canvas.create_text(c + 65, d + 15, text=i, font="Times 10 bold")
-
-        canvas.create_rectangle(c, d, c + 120, d + 30)
-        d = d + 30
-
-    for i in range(0, len(parse_table)):
-        for j in range(0, len(parse_table[0]) - 1):
-            print(m, n)
-            print(i, j)
-            canvas.create_text(m + 50, n + 15, text=parse_table[i][j], font="Times 10 bold")
-
-            canvas.create_rectangle(m, n, m + 120, n + 30)
-
-            m = m + 120
-        m = 130
-        n = n + 30
-
-    # show.geometry("%dx%d%+d%+d" % (1300, 800, 0,0))
-
-    scrol = Scrollbar(show)
-    scrol.configure(command=canvas.yview)
-    canvas.configure(yscrollcommand=scrol.set)
-    scrol.pack(side=LEFT, fill=BOTH)
-    # display.pack()
-
+    Parse_table.tree(parse_table)
 
 # han7tagoooo
 # def view_stack(inputstring):
@@ -624,49 +550,55 @@ def helper():
     items()
     global parse_table
     parse_table = [["" for c in range(len(terminals) + len(nonterminals) + 1)] for r in range(len(C))]
+    print(f"osos parse_table {parse_table}")
     print_info()
     construct_dfa()
 
 def remove_numbers(lst):
-
-        no_integers = [x for x in lst if not isinstance(x, int)]
         major_list = []
         for i in range(len(lst)):
             sublist = lst[i].split()
             for j in range(0, len(sublist), 2):
                 sublist[j] = int(sublist[j])
             no_integers = [x for x in sublist if not isinstance(x, int)]
-            for h in range(len(no_integers)):
-                no_integers[h] += str(h)
-            # print(no_integers)
             major_list.append(no_integers)
+        nodeCount = 0
+        i = 1
+        while i < len(major_list):
+            minLength = min(len(major_list[i]), len(major_list[i-1]))
+            for j in range(minLength):
+                if major_list[i][j] == major_list[i-1][j].split(".")[0]:
+                    major_list[i][j] += "." + major_list[i-1][j].split(".")[1]
+                else:
+                    major_list[i][j] += "." + str(nodeCount)
+                    nodeCount += 1
+            if len(major_list[i]) > len(major_list[i-1]):
+                j = minLength
+                while j < len(major_list[i]):
+                    major_list[i][j] += "." + str(nodeCount)
+                    nodeCount += 1
+                    j+=1
+            i+=1
         return major_list
 
-def parse_table_generator(lst):
+def parse_tree_generator(lst):
     stack = remove_numbers(lst)
     G = nx.DiGraph()
-    for i in range(len(stack)-1, 4,-1):
-        length_of_current_node = len(stack[i])
-        for j in range(len(stack[i])):
-            if stack[i][j] in stack[i-1]:
-                continue
-            else:
-                follow_length = len(stack[i-1])
-                for x in range(follow_length):
-                    if stack[i][j].isupper():
-                        G.add_edge(f"{stack[i][j]}",f"{stack[i-1][x]}")
-            if stack[i][j].islower() :
-                print(stack[i][j].islower())
-                while stack[i][0].islower():
-                    for f in range(i,0,-1):
-                        if len(stack[f]) >0:
-                            if stack[f][0].isupper():
-                                break
-                            print(f)
-                            print(j)
-                            print(f"poped{stack[f][0]}")
-                            stack[f].pop(0)
-                            print(stack)
+    i = 1
+    print(stack)
+    while i < len(stack):
+        # add rightmost entry in stack
+        G.add_node(stack[i][len(stack[i]) - 1])
+        myChildren = []
+        minLength = min(len(stack[i]), len(stack[i-1]))
+        for j in range(minLength):
+            if stack[i][j] != stack[i-1][j]:
+                myChildren.append(stack[i-1][j])
+        if len(stack[i-1]) > len(stack[i]):
+            myChildren += stack[i-1][minLength:]
+        for child in myChildren:
+            G.add_edge(stack[i][len(stack[i]) - 1], child)
+        i += 1
     pos = graphviz_layout(G, prog="dot")
     nx.draw(G, pos, node_size=500, with_labels=True, node_color="white")
     plt.show()

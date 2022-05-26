@@ -100,7 +100,7 @@ def parse_tree_helper():
     tokens = tekonizer.tok(INPUT)[0]
     string_tokens = tokens_map(tokens)
     stack= main_parser.process_input(string_tokens)[2]
-    main_parser.parse_table_generator(stack)
+    main_parser.parse_tree_generator(stack)
 
 parse_tree_frame = tk.Frame(
     master=buttons_frame,

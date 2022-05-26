@@ -56,7 +56,10 @@ def t_number(t):
     t.value = int(t.value)
     return t
 
-
+def t_eror(t):
+    r'\d+[a-zA-Z_][a-zA-Z_0-9]*'
+    print("Illegal character '%s'" % t.value[0])
+    t.lexer.skip(1)
 # data = input("Sentence: ")
 
 def tok(data):
