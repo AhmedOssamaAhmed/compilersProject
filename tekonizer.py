@@ -10,8 +10,10 @@ tokens = (
     'EQUAL',
     'GREATERTHAN'
     'PROHIBITED',
+    'PROHIBITED2',
 )
-
+t_number = r'[0-9]+'
+t_PROHIBITED2 = r'[0-9]+[a-zA-Z_]+'
 t_assign = r'\:\='
 t_semicolon = r'\;'
 t_LESSTHAN = r'\<'
@@ -24,7 +26,7 @@ reserved = {
     'until': 'until'
 }
 
-tokens = ['id', 'assign', 'number', 'semicolon', 'LESSTHAN', 'EQUAL', 'GREATERTHAN', 'PROHIBITED' ] + list(reserved.values())
+tokens = ['id', 'assign', 'number', 'semicolon', 'LESSTHAN', 'EQUAL', 'GREATERTHAN', 'PROHIBITED','PROHIBITED2' ] + list(reserved.values())
 
 def t_COMMENT(t):
     r'\#.*'
@@ -51,15 +53,7 @@ def t_error(t):
     t.lexer.skip(1)
 
 
-def t_number(t):
-    r'\d+'
-    t.value = int(t.value)
-    return t
 
-def t_eror(t):
-    r'\d+[a-zA-Z_][a-zA-Z_0-9]*'
-    print("Illegal character '%s'" % t.value[0])
-    t.lexer.skip(1)
 # data = input("Sentence: ")
 
 def tok(data):

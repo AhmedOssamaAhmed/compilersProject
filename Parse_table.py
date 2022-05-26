@@ -5,7 +5,7 @@ from tkinter import ttk
 def tree(lst = [(1,'no tokens',''," "),]):
     # Create an instance of tkinter frame
     win= Tk()
-    win.title("Stack List")
+    win.title("Parse table")
 
     # Set the size of the tkinter window
     win.geometry("1400x700")

@@ -7,8 +7,11 @@ import tekonizer
 import treeFile
 
 main_parser.helper()
+
+
 def dfa_helper():
     DFA.DFACheck(tekonizer.tok(editor.get("1.0", "end-1c"))[1])
+
 
 def tokens_map(list_tokens):
     string_token = ""
@@ -17,12 +20,31 @@ def tokens_map(list_tokens):
         string_token += " "
     return string_token
 
+
 def Take_input():
     INPUT = editor.get("1.0", "end-1c")
     print(INPUT)
     tokens = tekonizer.tok(INPUT)[0]
     print(f"ourrrrr tokens{tokens}")
     treeFile.tree(tokens)
+
+accepted = False
+def handler(e):
+    global accepted
+    INPUT = editor.get("1.0", "end-1c")
+    tokens = tekonizer.tok(INPUT)[0]
+    string_tokens = tokens_map(tokens)
+    act = main_parser.process_input(string_tokens)[4]
+    if act[-1]:
+        accepted = True
+        status.delete('1.0', tk.END)
+        status.insert(tk.END, "ACCEPTED")
+        status.configure(bg='green')
+    elif act[-1] != "accepted":
+        accepted = False
+        status.delete('1.0', tk.END)
+        status.insert(tk.END, "REJECTED")
+        status.configure(bg='red')
 
 
 window = tk.Tk()
@@ -42,9 +64,10 @@ editor_frame = tk.Frame(
     relief=tk.GROOVE,
     borderwidth=3
 )
+
 editor_frame.grid(row=1, column=1, pady=10, padx=0)
 guide_text = tk.Label(master=editor_frame, text="Enter your code here")
-editor = tk.Text(master=editor_frame, )
+editor = tk.Text(master=editor_frame)
 guide_text.pack()
 editor.pack()
 
@@ -79,10 +102,12 @@ DFA_frame.grid(row=0, column=1)
 DFA_button = tk.Button(master=DFA_frame, text="DFA", width=10, borderwidth=5, command=dfa_helper)
 DFA_button.pack()
 
+
 # parse table
 
 def parse_table_helper():
     main_parser.view_parsing()
+
 
 parse_table_frame = tk.Frame(
     master=buttons_frame,
@@ -90,17 +115,29 @@ parse_table_frame = tk.Frame(
     borderwidth=3
 )
 parse_table_frame.grid(row=0, column=2)
-parse_table_button = tk.Button(master=parse_table_frame, text="Parse table", width=10, borderwidth=5,command=parse_table_helper)
+parse_table_button = tk.Button(master=parse_table_frame, text="Parse table", width=10, borderwidth=5,
+                               command=parse_table_helper)
 parse_table_button.pack()
+
 
 # parse tree
 
 def parse_tree_helper():
-    INPUT = editor.get("1.0", "end-1c")
-    tokens = tekonizer.tok(INPUT)[0]
-    string_tokens = tokens_map(tokens)
-    stack= main_parser.process_input(string_tokens)[2]
-    main_parser.parse_tree_generator(stack)
+    if accepted:
+        INPUT = editor.get("1.0", "end-1c")
+        tokens = tekonizer.tok(INPUT)[0]
+        string_tokens = tokens_map(tokens)
+        stack = main_parser.process_input(string_tokens)[2]
+        main_parser.parse_tree_generator(stack)
+    else:
+        root = tk.Tk()
+        root.geometry("500x70")
+        error = tk.Label(master=root, text="   please enter valid syntax  ", font=('Arial', 20,),
+                         fg="red", bg="black")
+        error.pack()
+        root.title("Warning!!")
+        root.mainloop()
+
 
 parse_tree_frame = tk.Frame(
     master=buttons_frame,
@@ -108,12 +145,15 @@ parse_tree_frame = tk.Frame(
     borderwidth=3
 )
 parse_tree_frame.grid(row=0, column=3)
-parse_tree_button = tk.Button(master=parse_tree_frame, text="Parse tree", width=10, borderwidth=5,command=parse_tree_helper)
+parse_tree_button = tk.Button(master=parse_tree_frame, text="Parse tree", width=10, borderwidth=5,
+                              command=parse_tree_helper)
 parse_tree_button.pack()
+
 
 # SLR Diagram
 def slr_helper():
     main_parser.view_lr()
+
 
 SLR_frame = tk.Frame(
     master=buttons_frame,
@@ -121,8 +161,9 @@ SLR_frame = tk.Frame(
     borderwidth=3
 )
 SLR_frame.grid(row=0, column=4)
-SLR_button = tk.Button(master=SLR_frame, text="SLR Diagram", width=10, borderwidth=5,command=slr_helper)
+SLR_button = tk.Button(master=SLR_frame, text="SLR Diagram", width=10, borderwidth=5, command=slr_helper)
 SLR_button.pack()
+
 
 # Stack
 
@@ -131,9 +172,9 @@ def stack_helper():
     tokens = tekonizer.tok(INPUT)[0]
     string_tokens = tokens_map(tokens)
     row, ste, sta, inp, act = main_parser.process_input(string_tokens)
-    stack_list=[]
+    stack_list = []
     for i in range(len(sta)):
-        stack_list.append([sta[i],inp[i],act[i]])
+        stack_list.append([sta[i], inp[i], act[i]])
     print(stack_list)
     stack_tree.tree(stack_list)
     # main_parser.view_stack(string_tokens)
@@ -143,15 +184,28 @@ def stack_helper():
     print(f"inp is :{inp}")
     print(f"act is :{act}")
 
+
 stack_input = tk.Frame(
     master=buttons_frame,
     relief=tk.RAISED,
     borderwidth=3
 )
 stack_input.grid(row=0, column=5)
-stack_button = tk.Button(master=stack_input, text="Stack", width=10, borderwidth=5,command=stack_helper)
+stack_button = tk.Button(master=stack_input, text="Stack", width=10, borderwidth=5, command=stack_helper)
 stack_button.pack()
 
+# status
+status_frame = tk.Frame(
+    master=buttons_frame,
+    relief=tk.RAISED,
+    borderwidth=3
+)
+status_frame.grid(row=0, column=6)
+status = tk.Text(status_frame, width=8, height=1, bg="light blue", fg="navy")
+status.insert(tk.END, "status")
+status.pack(padx=5)
+
+window.bind('<Any-KeyPress>', handler)
 # regular expression
 regular_expression_frame = tk.Frame(
     master=frame,
@@ -172,18 +226,18 @@ DFA_hint_frame = tk.Frame(
     height=100,
 )
 DFA_hint_frame.grid(row=1, column=2, padx=0, pady=10, sticky='N')
-DFA_hint_lst = [('R','-->','repeat'),
-       ('I','-->','Identifier'),
-       ('A','-->','Assignment'),
-       ('N','-->','Number'),
-       ('S','-->','SemiColon'),
-       ('U','-->','Until'),
-       ('E','-->','Equal'),
-       ('G','-->','GreaterThan'),
-       ('L','-->','LessThan'),
-       ('P','-->','PROHIBITED')]
+DFA_hint_lst = [('R', '-->', 'repeat'),
+                ('I', '-->', 'Identifier'),
+                ('A', '-->', 'Assignment'),
+                ('N', '-->', 'Number'),
+                ('S', '-->', 'SemiColon'),
+                ('U', '-->', 'Until'),
+                ('E', '-->', 'Equal'),
+                ('G', '-->', 'GreaterThan'),
+                ('L', '-->', 'LessThan'),
+                ('P', '-->', 'PROHIBITED')]
 
-DFA_table = Table_file.Table(DFA_hint_frame,DFA_hint_lst,10,"DFA hint list")
+DFA_table = Table_file.Table(DFA_hint_frame, DFA_hint_lst, 10, "DFA hint list")
 
 # our grammar
 grammar_frame = tk.Frame(
@@ -192,15 +246,14 @@ grammar_frame = tk.Frame(
     borderwidth=3,
     height=100,
 )
-grammar_frame.grid(row=1,column=3,padx=0,pady=10,sticky='N')
-grammar_lst = [('stmt-seq','-->','statement stmt-seq\''),
-       ('stmt-seq\'','-->','statement stmt-seq\' | epsilon'),
-       ('statement','-->','repeat-stmt | assign-stmt'),
-       ('repeat-stmt','-->','repeat stmt-seq Until ID'),
-       ('assign-stmt','-->','ID ASSIGN factor SEMICOLON'),
-       ('factor','-->','ID | NUMBER'),
-       ]
-grammar_table = Table_file.Table(grammar_frame,grammar_lst,23,"Grammar")
+grammar_frame.grid(row=1, column=3, padx=0, pady=10, sticky='N')
+grammar_lst = [('STMT-SEQ', '-->', 'STMT-SEQ STATEMENT | STATEMENT'),
+               ('STATEMENT', '-->', 'REPEAT-STMT | ASSIGN-STMT'),
+               ('REPEAT-STMT', '-->', 'repeat STMT-SEQ until id'),
+               ('ASSIGN-STMT', '-->', 'id assign FACTOR semicolon'),
+               ('FACTOR', '-->', 'id | number'),
+               ]
+grammar_table = Table_file.Table(grammar_frame, grammar_lst, 23, "Grammar")
 
 #
 # # stack
