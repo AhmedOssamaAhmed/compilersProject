@@ -13,19 +13,6 @@ from networkx.drawing.nx_pydot import graphviz_layout
 
 import Parse_table
 
-global master
-master = Tk()
-master.wm_withdraw()
-master.title('SLR Parser')
-
-canvas = Canvas(master, width=master.winfo_screenwidth(), height=master.winfo_screenheight())
-
-u1_entry = Entry(canvas)
-canvas.create_window(220, 200, window=u1_entry, height=150, width=300)
-
-u2_entry = Entry(canvas)
-canvas.create_window(220, 430, window=u2_entry, height=100, width=300)
-
 grammars = open("grammer.txt")
 G = {}
 C = {}
@@ -240,76 +227,76 @@ def ACTION(i, a):
         return "acc"
     return ""
 
-
-def print_info():
-    print("GRAMMAR:")
-    for head in G.keys():
-        if head == start:
-            continue
-        print("{:>{width}} ->".format(head, width=len(max(G.keys(), key=len)))),
-        num_prods = 0
-        for prods in G[head]:
-            if num_prods > 0:
-                print("|"),
-            for prod in prods:
-                print(prod),
-            num_prods += 1
-        print()
-    print("\nAUGMENTED GRAMMAR:")
-    i = 0
-    for head in G.keys():
-        for prods in G[head]:
-            for prod in prods:
-                print(prod),
-            print()
-            i += 1
-    for head in G:
-        num_terms = 0
-        for terms in FIRST(head):
-            if num_terms > 0:
-                print(", "),
-            print(terms),
-            num_terms += 1
-
-    for head in G:
-        num_terms = 0
-        for terms in FOLLOW(head):
-            if num_terms > 0:
-                print(", "),
-            print(terms),
-            num_terms += 1
-        print("}")
-
-    print("\nITEMS:")
-    for i in range(len(C)):
-        print('I' + str(i) + ':')
-        for keys in C['I' + str(i)]:
-            for prods in C['I' + str(i)][keys]:
-                print("{:>{width}} ->".format(keys, width=len(max(G.keys(), key=len)))),
-                for prod in prods:
-                    print(prod),
-                print()
-        print()
-
-    for i in range(len(parse_table)):  # len gives number of states
-        for j in symbols:
-            ACTION(i, j)
-
-
-    for terms in terminals:
-        print("{:^7}|".format(terms)),
-    print("{:^7}|".format("$")),
-    for nonterms in nonterminals:
-        if nonterms == start:
-            continue
-        print("{:^7}|".format(nonterms)),
-    print("\n+" + "--------+" * (len(terminals) + len(nonterminals) + 1))
-    for i in range(len(parse_table)):
-        print("|{:^8}|".format(i)),
-        for j in range(len(parse_table[i]) - 1):
-            print("{:^7}|".format(parse_table[i][j])),
-        print()
-    print("+" + "--------+" * (len(terminals) + len(nonterminals) + 1))
+#
+# def print_info():
+#     print("GRAMMAR:")
+#     for head in G.keys():
+#         if head == start:
+#             continue
+#         print("{:>{width}} ->".format(head, width=len(max(G.keys(), key=len)))),
+#         num_prods = 0
+#         for prods in G[head]:
+#             if num_prods > 0:
+#                 print("|"),
+#             for prod in prods:
+#                 print(prod),
+#             num_prods += 1
+#         print()
+#     print("\nAUGMENTED GRAMMAR:")
+#     i = 0
+#     for head in G.keys():
+#         for prods in G[head]:
+#             for prod in prods:
+#                 print(prod),
+#             print()
+#             i += 1
+#     for head in G:
+#         num_terms = 0
+#         for terms in FIRST(head):
+#             if num_terms > 0:
+#                 print(", "),
+#             print(terms),
+#             num_terms += 1
+#
+#     for head in G:
+#         num_terms = 0
+#         for terms in FOLLOW(head):
+#             if num_terms > 0:
+#                 print(", "),
+#             print(terms),
+#             num_terms += 1
+#         print("}")
+#
+#     print("\nITEMS:")
+#     for i in range(len(C)):
+#         print('I' + str(i) + ':')
+#         for keys in C['I' + str(i)]:
+#             for prods in C['I' + str(i)][keys]:
+#                 print("{:>{width}} ->".format(keys, width=len(max(G.keys(), key=len)))),
+#                 for prod in prods:
+#                     print(prod),
+#                 print()
+#         print()
+#
+#     for i in range(len(parse_table)):  # len gives number of states
+#         for j in symbols:
+#             ACTION(i, j)
+#
+#
+#     for terms in terminals:
+#         print("{:^7}|".format(terms)),
+#     print("{:^7}|".format("$")),
+#     for nonterms in nonterminals:
+#         if nonterms == start:
+#             continue
+#         print("{:^7}|".format(nonterms)),
+#     print("\n+" + "--------+" * (len(terminals) + len(nonterminals) + 1))
+#     for i in range(len(parse_table)):
+#         print("|{:^8}|".format(i)),
+#         for j in range(len(parse_table[i]) - 1):
+#             print("{:^7}|".format(parse_table[i][j])),
+#         print()
+#     print("+" + "--------+" * (len(terminals) + len(nonterminals) + 1))
 
 
 def construct_dfa():
@@ -458,18 +445,12 @@ def view_parsing():
     Parse_table.tree(parse_table)
 
 
-def getG():
-    inputstring = u1_entry.get()
-    print(inputstring)
-
 
 def helper():
     parse_grammar()
     items()
     global parse_table
     parse_table = [["" for c in range(len(terminals) + len(nonterminals) + 1)] for r in range(len(C))]
-    print(f"osos parse_table {parse_table}")
-    print_info()
     construct_dfa()
 
 def remove_numbers(lst):
